@@ -3,129 +3,129 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#10161c">
-<meta name="description" content="График отключений ДТЭК, группа GPV4.2">
-<title>ДТЭК · GPV4.2</title>
+<meta name="theme-color" content="#101c25">
+<meta name="description" content="График отключений ДТЭК GPV4.2">
+<title>График отключений · GPV4.2</title>
 <style>
-:root{color-scheme:dark;--bg:#10161c;--panel:#192128;--border:#303e48;--text:#d9e2e6;--muted:#81939d;--green:#50b6a4;--red:#e17a70}
+:root{color-scheme:dark;--bg:#101d26;--panel:#14232e;--border:#304753;--text:#ecf4f7;--muted:#93aab5;--cyan:#24d8e6;--green:#23c98e;--red:#f05158}
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font:13px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
 a{color:inherit;text-decoration:none}
-a:hover{color:var(--green)}
-.container{width:min(940px,calc(100% - 40px));margin:auto}
-.topbar{min-height:54px;display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:1px solid var(--border)}
-.brand{display:flex;align-items:center;gap:10px;font-size:13px;letter-spacing:.015em}
-.brand i{display:block;width:7px;height:7px;background:var(--green);border-radius:2px}
-.brand b{font-size:14px;color:#eef4f5}
-.brand span{color:var(--muted)}
-.top-right{display:flex;gap:20px;align-items:center;color:var(--muted);font-size:11px}
-.hero{margin:20px 0 26px}
-.status-card{border:1px solid var(--border);border-radius:6px;background:var(--panel);padding:12px 18px}
-.card-top{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:10px;letter-spacing:.08em;font-weight:700}
-.clock{font:11px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:0}
-.status-main{display:flex;align-items:center;gap:12px;min-height:31px;flex-wrap:wrap}
-.status-dot{width:9px;height:9px;border-radius:50%;background:var(--green);flex:none}
-.status-card.off .status-dot{background:var(--red)}
-.status-name{font-size:20px;font-weight:650;letter-spacing:-.035em}
+a:hover{color:var(--cyan)}
+.container{width:min(1380px,calc(100% - 40px));margin:0 auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:21px 0 19px;border-bottom:2px solid var(--cyan)}
+.brand{display:flex;align-items:center;gap:14px}
+.brand svg{width:28px;height:35px;color:var(--cyan);flex:none}
+h1{font-size:clamp(19px,2.1vw,26px);font-weight:700;letter-spacing:-.035em;margin:0}
+.group{padding:4px 11px;border:1px solid var(--cyan);border-radius:7px;color:var(--cyan);font:700 16px/1.35 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:nowrap}
+main{padding:21px 0 24px}
+.status-card,.day-card,.footer{background:var(--panel);border:1px solid var(--border);border-radius:8px}
+.status-card{display:flex;align-items:center;justify-content:space-between;gap:22px;min-height:88px;padding:14px 24px;margin-bottom:18px}
+.status-caption{font-size:12px;font-weight:600;color:var(--muted)}
+.status-name{margin-top:2px;font-size:23px;font-weight:650;letter-spacing:-.03em;color:var(--green)}
 .status-card.off .status-name{color:var(--red)}
-.status-sub{display:none}
-.next-caption{margin-left:auto;color:var(--muted);font-size:11px}
-.next-value{font:12px ui-monospace,SFMono-Regular,Consolas,monospace;color:#c0cbd0}
-.schedule-heading{display:flex;align-items:baseline;justify-content:space-between;gap:15px;margin-bottom:14px}
-h1{font-size:19px;font-weight:650;letter-spacing:-.035em;margin:0}
-.legend{display:flex;gap:14px;align-items:center;color:var(--muted);font-size:11px;white-space:nowrap}
-.legend-item{display:flex;gap:6px;align-items:center}
-.legend-color{width:9px;height:9px;border-radius:2px;background:var(--green)}
+.status-card.unknown .status-name{color:var(--muted)}
+.legend{display:flex;align-items:center;gap:27px;flex-wrap:wrap;font-size:13px}
+.legend-item{display:flex;align-items:center;gap:9px;white-space:nowrap}
+.legend-color{display:inline-block;flex:none;width:19px;height:19px;border-radius:5px;background:var(--green)}
 .legend-color.off{background:var(--red)}
-.day-stack{display:grid;gap:12px}
-.day-card{border:1px solid var(--border);border-radius:6px;background:var(--panel);padding:18px 20px}
-.day-header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:17px}
-.day-id{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--green);text-transform:uppercase}
-.tomorrow .day-id{color:var(--muted)}
-.day-date{font-size:16px;font-weight:650;letter-spacing:-.025em;margin-top:2px}
-.last-update{font-size:10px;color:var(--muted);text-align:right}
-.timeline-viewport{overflow-x:auto;scrollbar-width:thin;scrollbar-color:#50606a transparent}
-.timeline{min-width:560px}
-.timeline-shell{position:relative}
-.timeline-strip{height:40px;display:grid;grid-template-columns:repeat(48,minmax(0,1fr));border-radius:3px;overflow:hidden;background:#39444b}
+.day-stack{display:grid;gap:18px}
+.day-card{display:grid;grid-template-columns:138px minmax(0,1fr) 177px;align-items:center;gap:22px;min-height:154px;padding:22px 24px}
+.day-title{align-self:center}
+.day-id{font-size:22px;font-weight:650;letter-spacing:-.035em}
+.day-date{font:13px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--muted);margin-top:2px}
+.timeline-viewport{min-width:0;overflow-x:auto;scrollbar-width:thin;scrollbar-color:#55717e transparent;padding-bottom:13px}
+.timeline{min-width:550px}
+.hour-axis{display:grid;grid-template-columns:repeat(24,minmax(0,1fr));margin-bottom:10px}
+.hour-label{font:11px ui-monospace,SFMono-Regular,Consolas,monospace;color:#a1b3be;text-align:center}
+.timeline-shell{position:relative;margin:0 1px 13px}
+.timeline-strip{height:43px;display:grid;grid-template-columns:repeat(48,minmax(0,1fr));overflow:hidden;border-radius:8px;background:#46505a}
 .slot{position:relative;min-width:0}
 .slot.on{background:var(--green)}
 .slot.off{background:var(--red)}
-.slot:nth-child(even):not(:last-child){box-shadow:inset -1px 0 rgba(13,22,30,.2)}
-.slot:nth-child(6n):not(:last-child)::after{content:"";position:absolute;right:0;top:0;bottom:0;width:1px;background:rgba(13,22,30,.5)}
-.now-marker{position:absolute;top:-3px;bottom:-3px;width:2px;background:#fff;box-shadow:0 0 0 1px #12171b;z-index:2;pointer-events:none}
-.now-marker::before{content:"";position:absolute;top:-3px;left:-3px;width:8px;height:8px;background:#fff;border-radius:50%}
-.axis{height:18px;position:relative;margin-top:7px;font:10px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--muted)}
-.axis-label{position:absolute;transform:translateX(-50%)}
-.axis-label:first-child{transform:none}
-.axis-label:last-child{transform:translateX(-100%)}
-.timeline-footer{display:flex;justify-content:flex-end;margin-top:3px}
-.duration-summary{font-size:11px;color:var(--muted)}
-.duration-summary strong{color:var(--text);font-weight:600}
-.outages{display:flex;align-items:flex-start;gap:16px;margin-top:14px;padding-top:11px;border-top:1px solid var(--border)}
-.outages-label{color:var(--muted);font-size:11px;padding-top:4px;flex:none}
-.periods{display:flex;gap:6px;flex-wrap:wrap}
-.period{padding:4px 8px;border-radius:3px;border:1px solid #734a48;background:#392b2d;color:#efaaa4;font:11px ui-monospace,SFMono-Regular,Consolas,monospace;white-space:nowrap}
-.period.none{color:var(--green);border-color:#355a54;background:#243b38}
-.empty{padding:24px 0;color:var(--muted);font-size:12px}
-.error-message{font-size:12px;color:var(--red)}
-.footer{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:17px 0 25px;margin-top:16px;border-top:1px solid var(--border);color:var(--muted);font-size:10px}
-@media(max-width:620px){
- .container{width:calc(100% - 24px)}
- .top-right{gap:9px;font-size:10px}
- .hero{margin:12px 0 20px}
- .status-card{padding:10px 12px}
- .status-main{gap:8px}
- .status-name{font-size:18px}
- .next-caption{margin-left:0;width:100%}
- .next-value{margin-top:-8px}
- .schedule-heading{align-items:flex-start;flex-wrap:wrap}
- h1{font-size:17px}
- .day-card{padding:13px 12px}
- .day-date{font-size:14px}
- .day-header{margin-bottom:13px}
- .outages{gap:10px;flex-direction:column}
- .outages-label{padding:0}
+.slot:nth-child(even):not(:last-child)::after{content:"";position:absolute;right:0;top:0;bottom:0;width:1px;background:rgba(20,33,41,.19)}
+.now-marker{position:absolute;z-index:2;top:-5px;bottom:-12px;width:2px;background:#fff;box-shadow:0 0 0 1px rgba(13,28,38,.24);pointer-events:none}
+.now-marker::after{content:"";position:absolute;bottom:-7px;left:-7px;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:10px solid #fff}
+.periods{align-self:stretch;display:flex;flex-direction:column;justify-content:center;gap:9px;padding-left:18px;border-left:1px solid var(--border);min-height:102px}
+.period{display:flex;align-items:center;gap:12px;font:12px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--text);white-space:nowrap}
+.period::before{content:"";width:4px;height:17px;background:var(--red);border-radius:2px;flex:none}
+.period.none{color:var(--green)}
+.period.none::before{background:var(--green)}
+.empty{grid-column:2/4;padding:16px 0;color:var(--muted);font-size:13px}
+.footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 18px;margin-bottom:20px;font-size:12px;color:var(--muted)}
+.footer-left{display:flex;align-items:center;gap:11px}
+.footer-icon{width:16px;height:16px;flex:none;color:var(--cyan)}
+.footer-right{display:flex;align-items:center;gap:18px}
+@media(max-width:1080px){
+ .day-card{grid-template-columns:105px minmax(0,1fr);gap:13px;padding:17px}
+ .day-id{font-size:18px}
+ .periods{grid-column:2;flex-direction:row;flex-wrap:wrap;gap:8px 18px;justify-content:flex-start;min-height:0;padding:8px 0 0;border-left:0;border-top:1px solid var(--border)}
+ .period{font-size:11px;gap:7px}
+ .period::before{height:13px}
+ .empty{grid-column:2}
+}
+@media(max-width:650px){
+ .container{width:calc(100% - 22px)}
+ .topbar{padding:14px 0;gap:9px}
+ .brand{gap:9px}
+ .brand svg{width:21px;height:27px}
+ h1{font-size:18px}
+ .group{font-size:12px;padding:4px 7px}
+ main{padding:12px 0 18px}
+ .status-card{align-items:flex-start;flex-direction:column;gap:12px;padding:14px;margin-bottom:12px}
+ .status-name{font-size:20px}
+ .legend{gap:16px;font-size:11px}
+ .legend-color{width:12px;height:12px;border-radius:3px}
+ .day-stack{gap:12px}
+ .day-card{display:block;min-height:0;padding:13px}
+ .day-title{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:12px}
+ .day-id{font-size:17px}
+ .day-date{font-size:12px}
+ .timeline-viewport{padding-bottom:14px}
+ .hour-label{font-size:10px}
+ .timeline-strip{height:36px}
+ .periods{display:flex;gap:8px 16px;padding-top:10px}
+ .empty{padding:12px 0}
+ .footer{padding:12px;margin-bottom:10px;align-items:flex-start;flex-direction:column;gap:8px;font-size:11px}
 }
 </style>
 </head>
 <body>
 <div class="container">
 <header class="topbar">
-    <div class="brand"><i aria-hidden="true"></i><b>ДТЭК</b><span>/</span> GPV4.2</div>
-    <div class="top-right"><span>Europe/Kyiv</span><a href="https://www.dtek-dnem.com.ua/ua/shutdowns" target="_blank" rel="noopener noreferrer">Источник ↗</a></div>
+    <div class="brand">
+        <svg aria-hidden="true" viewBox="0 0 24 32" fill="currentColor"><path d="M12 0 1 18h9L8 32l15-20h-9L17 0z"/></svg>
+        <h1>График отключений</h1>
+    </div>
+    <span class="group">GPV4.2</span>
 </header>
 <main>
-    <section class="hero" aria-label="Текущее состояние">
-        <div class="status-card" id="status-card" aria-live="polite">
-            <div class="card-top"><span>СЕЙЧАС</span><span class="clock" id="kyiv-clock">--:--</span></div>
-            <div class="status-main">
-                <span class="status-dot" aria-hidden="true"></span>
-                <span class="status-name" id="current-status">Загрузка…</span>
-                <span class="status-sub" id="current-description"></span>
-                <span class="next-caption">Следующее</span>
-                <span class="next-value" id="next-change">—</span>
-            </div>
-        </div>
+    <section class="status-card unknown" id="status-card" aria-live="polite">
+        <div><div class="status-caption">Сейчас</div><div class="status-name" id="current-status">Загрузка…</div></div>
+        <div class="legend"><span class="legend-item"><i class="legend-color"></i> Электроэнергия есть</span><span class="legend-item"><i class="legend-color off"></i> Отключение</span></div>
     </section>
-    <section aria-labelledby="schedule-title">
-        <div class="schedule-heading">
-            <h1 id="schedule-title">График отключений</h1>
-            <div class="legend"><span class="legend-item"><i class="legend-color"></i> Свет есть</span><span class="legend-item"><i class="legend-color off"></i> Нет света</span></div>
-        </div>
-        <div class="day-stack">
-            <article class="day-card" id="today-card" aria-labelledby="today-date"><div class="day-header"><div><div class="day-id">Сегодня</div><div class="day-date" id="today-date">Загрузка…</div></div><div class="last-update" id="today-update"></div></div><div id="today-content"></div></article>
-            <article class="day-card tomorrow" id="tomorrow-card" aria-labelledby="tomorrow-date"><div class="day-header"><div><div class="day-id">Завтра</div><div class="day-date" id="tomorrow-date">Загрузка…</div></div><div class="last-update" id="tomorrow-update"></div></div><div id="tomorrow-content"></div></article>
-        </div>
+    <section class="day-stack" aria-label="Графики отключений">
+        <article class="day-card" id="today-card" aria-labelledby="today-label">
+            <div class="day-title"><div class="day-id" id="today-label">Сегодня</div><div class="day-date" id="today-date"></div></div>
+            <div class="timeline-viewport" id="today-content"><div class="empty">Загрузка…</div></div>
+            <div class="periods" id="today-periods"></div>
+        </article>
+        <article class="day-card tomorrow" id="tomorrow-card" aria-labelledby="tomorrow-label">
+            <div class="day-title"><div class="day-id" id="tomorrow-label">Завтра</div><div class="day-date" id="tomorrow-date"></div></div>
+            <div class="timeline-viewport" id="tomorrow-content"><div class="empty">Загрузка…</div></div>
+            <div class="periods" id="tomorrow-periods"></div>
+        </article>
     </section>
 </main>
-<footer class="footer"><span>График по 30 минут · данные ДТЭК</span><a href="https://github.com/KorobeynikovAndrey/dtek-shutdowns" target="_blank" rel="noopener noreferrer">GitHub ↗</a></footer>
+<footer class="footer">
+    <div class="footer-left"><svg class="footer-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v6h-6"/></svg><span id="last-update">Обновлено: —</span></div>
+    <div class="footer-right"><span>Автообновление: 5 мин</span><a href="https://www.dtek-dnem.com.ua/ua/shutdowns" target="_blank" rel="noopener noreferrer">ДТЭК ↗</a></div>
+</footer>
 </div>
 <script>
 const timeZone = 'Europe/Kyiv';
 const group = 'GPV4.2';
 const dateFormatter = new Intl.DateTimeFormat('en-GB', {timeZone, year:'numeric', month:'2-digit', day:'2-digit'});
-const displayFormatter = new Intl.DateTimeFormat('ru-RU', {timeZone, weekday:'long', day:'numeric', month:'long'});
 let schedules = {};
 
 function dateKey(date) {
@@ -138,23 +138,19 @@ function nextDay(key) {
     return new Date(Date.UTC(y,m-1,d+1)).toISOString().slice(0,10);
 }
 
-function dateText(key) {
-    return displayFormatter.format(new Date(`${key}T12:00:00Z`));
-}
-
 function minutesNow() {
-    const parts = Object.fromEntries(new Intl.DateTimeFormat('en-GB', {timeZone, hour:'2-digit', minute:'2-digit', hourCycle:'h23'}).formatToParts(new Date()).map(p => [p.type,p.value]));
+    const parts = Object.fromEntries(new Intl.DateTimeFormat('en-GB', {timeZone,hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date()).map(p => [p.type,p.value]));
     return Number(parts.hour)*60+Number(parts.minute);
 }
 
 function slotsOf(json, key) {
-    if (!json || json.group !== group || !json.data) return null;
-    const entry = Object.entries(json.data).find(([stamp]) => dateKey(new Date(Number(stamp)*1000)) === key);
+    if (!json || json.group!==group || !json.data) return null;
+    const entry = Object.entries(json.data).find(([stamp]) => dateKey(new Date(Number(stamp)*1000))===key);
     if (!entry) return null;
     const hours = entry[1];
     const types = {yes:[true,true], no:[false,false], first:[false,true], second:[true,false]};
-    const slots = [];
-    for (let i=1;i<=24;i++) {
+    const slots=[];
+    for(let i=1;i<=24;i++) {
         if (!Object.hasOwn(types,hours[i])) return null;
         slots.push(...types[hours[i]]);
     }
@@ -162,104 +158,92 @@ function slotsOf(json, key) {
 }
 
 function clockTime(slot) {
-    const min=slot*30;
+    const min = slot*30;
     return `${String(Math.floor(min/60)).padStart(2,'0')}:${String(min%60).padStart(2,'0')}`;
 }
 
-function duration(slots, value) {
-    const count=slots.filter(v => v===value).length;
-    return Number.isInteger(count/2)?`${count/2} ч`:`${Math.floor(count/2)} ч 30 мин`;
-}
-
 function offPeriods(slots) {
-    const result=[];
-    for (let i=0;i<48;) {
-        if (slots[i]) {i++;continue;}
+    const periods=[];
+    for(let i=0;i<48;) {
+        if(slots[i]){i++;continue;}
         const start=i;
         while(i<48&&!slots[i])i++;
-        result.push({start,end:i});
+        periods.push({start,end:i});
     }
-    return result;
+    return periods;
 }
 
 function renderTimeline(slots, today) {
-    const periods=offPeriods(slots);
-    const marker=today?`<div class="now-marker" id="now-marker" style="left:${minutesNow()/1440*100}%" aria-hidden="true"></div>`:'';
-    const strip=slots.map(v=>`<div class="slot ${v?'on':'off'}"></div>`).join('');
-    const labels=Array.from({length:9},(_,i)=>`<span class="axis-label" style="left:${i*12.5}%">${String(i*3).padStart(2,'0')}:00</span>`).join('');
-    const badges=periods.length?periods.map(p=>`<span class="period">${clockTime(p.start)}–${clockTime(p.end)}</span>`).join(''):'<span class="period none">Отключений нет</span>';
-    return `<div class="timeline-viewport" aria-label="График по получасовым интервалам"><div class="timeline"><div class="timeline-shell"><div class="timeline-strip">${strip}</div>${marker}</div><div class="axis">${labels}</div></div></div>
-        <div class="timeline-footer"><div class="duration-summary">Без света <strong>${duration(slots,false)}</strong></div></div>
-        <div class="outages"><div class="outages-label">Отключения</div><div class="periods">${badges}</div></div>`;
+    const strip = slots.map(v=>`<div class="slot ${v?'on':'off'}"></div>`).join('');
+    const axis = Array.from({length:24},(_,i)=>`<span class="hour-label">${String(i).padStart(2,'0')}</span>`).join('');
+    const marker = today?`<div class="now-marker" id="now-marker" style="left:${minutesNow()/1440*100}%" aria-hidden="true"></div>`:'';
+    return `<div class="timeline"><div class="hour-axis">${axis}</div><div class="timeline-shell"><div class="timeline-strip">${strip}</div>${marker}</div></div>`;
 }
 
-function emptyMarkup(message, extra='') {
-    return `<div class="empty">${message}</div>`;
+function renderPeriods(slots) {
+    const periods=offPeriods(slots);
+    return periods.length?periods.map(p=>`<div class="period">${clockTime(p.start)} – ${clockTime(p.end)}</div>`).join(''):'<div class="period none">Отключений нет</div>';
 }
 
 async function fetchSchedule(file) {
     const response=await fetch(`${file}?v=${Date.now()}`, {cache:'no-store'});
-    if (response.status===404) return null;
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    if(response.status===404) return null;
+    if(!response.ok) throw new Error(`HTTP ${response.status}`);
     return response.json();
 }
 
 function updateStatus(todaySlots, todayKey) {
-    const now=new Date();
-    const minutes=minutesNow();
-    const clock=`${clockTime(Math.floor(minutes/30)).slice(0,3)}${String(minutes%60).padStart(2,'0')}`;
-    document.getElementById('kyiv-clock').textContent=`КИЕВ · ${clock}`;
-    const marker=document.getElementById('now-marker');
-    if(marker) marker.style.left=`${minutes/1440*100}%`;
     const card=document.getElementById('status-card');
     const title=document.getElementById('current-status');
-    const sub=document.getElementById('current-description');
-    const next=document.getElementById('next-change');
-    if (!todaySlots||dateKey(now)!==todayKey) {
-        card.classList.remove('off');title.textContent='Нет данных';sub.textContent='Актуальный график пока не опубликован';next.textContent='—';return;
+    const now=new Date();
+    const minutes=minutesNow();
+    const marker=document.getElementById('now-marker');
+    if(marker) marker.style.left=`${minutes/1440*100}%`;
+    if(!todaySlots || dateKey(now)!==todayKey){
+        card.classList.remove('off');card.classList.add('unknown');title.textContent='Нет данных';return;
     }
-    const index=Math.min(47,Math.floor(minutes/30));
-    const isOn=todaySlots[index];
-    card.classList.toggle('off',!isOn);
-    title.textContent=isOn?'Свет есть':'Нет света';
-    sub.textContent=isOn?'По опубликованному графику':'По опубликованному графику';
-    const nextIndex=todaySlots.findIndex((v,i)=>i>index&&v!==isOn);
-    next.textContent=nextIndex===-1?'До конца суток без изменений':`${clockTime(nextIndex)} · ${isOn?'отключение':'включение'}`;
+    const isOn=todaySlots[Math.min(47,Math.floor(minutes/30))];
+    card.classList.remove('unknown');card.classList.toggle('off',!isOn);
+    title.textContent=isOn?'Электроэнергия есть':'Отключение';
 }
 
 async function loadSchedules() {
     const today=dateKey(new Date());
     const tomorrow=nextDay(today);
-    document.getElementById('today-date').textContent=dateText(today);
-    document.getElementById('tomorrow-date').textContent=dateText(tomorrow);
+    document.getElementById('today-date').textContent=today;
+    document.getElementById('tomorrow-date').textContent=tomorrow;
     const items=[['today','today.json',today],['tomorrow','tomorrow.json',tomorrow]];
+    const updates={};
     await Promise.all(items.map(async ([name,file,key])=>{
         const content=document.getElementById(`${name}-content`);
-        const update=document.getElementById(`${name}-update`);
+        const periods=document.getElementById(`${name}-periods`);
         try {
             const json=await fetchSchedule(file);
             const slots=slotsOf(json,key);
             schedules[name]=slots;
-            if(slots) {
+            if(slots){
                 content.innerHTML=renderTimeline(slots,name==='today');
-                update.textContent=`Обновлено: ${json.update||'—'}`;
+                periods.innerHTML=renderPeriods(slots);
+                updates[name]=json.update;
             } else {
-                content.innerHTML=name==='today'?emptyMarkup('График пока недоступен','Ожидаем публикацию расписания на сегодня.'):emptyMarkup('График ещё не опубликован','Как только появится расписание на завтра, оно отобразится здесь.');
-                update.textContent='';
+                content.innerHTML=`<div class="empty">${name==='today'?'График недоступен':'График ещё не опубликован'}</div>`;
+                periods.innerHTML='';
             }
-        } catch(err) {
-            schedules[name]=null;update.textContent='';
-            content.innerHTML=emptyMarkup('Не удалось загрузить график','Проверьте подключение и обновите страницу.');
+        }catch(err){
+            schedules[name]=null;
+            content.innerHTML='<div class="empty">Ошибка загрузки графика</div>';
+            periods.innerHTML='';
             console.error(file,err);
         }
     }));
+    document.getElementById('last-update').textContent=`Обновлено: ${updates.today||updates.tomorrow||'—'}`;
     updateStatus(schedules.today,today);
 }
 
 loadSchedules();
 setInterval(()=>{
     const today=dateKey(new Date());
-    if (document.getElementById('today-date').textContent!==dateText(today)) loadSchedules();
+    if(document.getElementById('today-date').textContent!==today) loadSchedules();
     else updateStatus(schedules.today,today);
 },30*1000);
 setInterval(loadSchedules,5*60*1000);
