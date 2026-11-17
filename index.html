@@ -3,153 +3,123 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0b1219">
-<meta name="description" content="График электроснабжения ДТЭК для группы GPV4.2 — сегодня и завтра, по получасовым интервалам.">
-<title>Свет по расписанию — ДТЭК 4.2</title>
+<meta name="theme-color" content="#10161c">
+<meta name="description" content="График отключений ДТЭК, группа GPV4.2">
+<title>ДТЭК · GPV4.2</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
-:root { color-scheme:dark; --bg:#0b1219; --panel:#14212a; --panel2:#192a32; --border:#32434b; --text:#f5f6f3; --muted:#9bafb4; --green:#69e6b8; --red:#ff947b; --yellow:#f2ce84; }
+:root{color-scheme:dark;--bg:#10161c;--panel:#192128;--border:#303e48;--text:#d9e2e6;--muted:#81939d;--green:#50b6a4;--red:#e17a70}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font:500 15px/1.55 Manrope,system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden}
-body::before{content:"";position:absolute;z-index:-1;inset:0 0 auto;height:850px;pointer-events:none;background:radial-gradient(ellipse 48% 44% at 82% 21%,rgba(46,136,130,.17),transparent 78%),radial-gradient(ellipse 40% 40% at 4% 4%,rgba(160,130,85,.09),transparent 78%)}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font:13px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
 a{color:inherit;text-decoration:none}
-button{font:inherit}
-.container{width:min(1180px,calc(100% - 64px));margin:0 auto}
-.topbar{height:96px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(170,192,192,.13)}
-.logo{display:flex;align-items:center;gap:13px;font-size:16px;letter-spacing:-.025em;font-weight:800}
-.logo-mark{width:42px;height:42px;border-radius:13px;background:var(--green);display:grid;place-items:center;color:#0a2829;box-shadow:0 5px 22px rgba(105,230,184,.16)}
-.logo-mark svg{width:23px;height:23px}
-.logo-sub{display:block;font-weight:600;font-size:10px;letter-spacing:.16em;color:var(--muted);margin-top:-2px}
-.top-right{display:flex;align-items:center;gap:25px;font-size:12px;color:var(--muted)}
-.zone{display:flex;align-items:center;gap:9px;font-weight:700;letter-spacing:.04em;color:#cfddda}
-.zone-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(105,230,184,.11)}
-.source-link{border:1px solid var(--border);padding:9px 13px;border-radius:9px;transition:border-color .2s,color .2s}
-.source-link:hover{color:white;border-color:#78928f}
-.hero{display:grid;grid-template-columns:1.07fr .93fr;gap:44px;align-items:center;padding:70px 0 58px}
-.eyebrow{font-size:11px;font-weight:800;letter-spacing:.23em;text-transform:uppercase;color:var(--green);display:flex;align-items:center;gap:12px;margin-bottom:23px}
-.eyebrow::before{content:"";width:22px;height:1px;background:currentColor}
-h1{font-size:clamp(46px,5.7vw,79px);font-weight:800;letter-spacing:-.077em;line-height:1.075;margin:0 0 25px;max-width:650px}
-h1 em{font-style:normal;color:var(--green)}
-.lead{max-width:450px;font-size:16px;line-height:1.8;color:var(--muted);margin:0}
-.hero-note{display:flex;gap:11px;align-items:center;color:#80979d;font-size:12px;margin-top:34px}
-.hero-note svg{width:17px;height:17px;color:#79968d}
-.status-card{min-height:302px;border-radius:22px;padding:34px 38px;position:relative;overflow:hidden;background:linear-gradient(148deg,#1c343c 0%,#17262f 45%,#15232b 100%);border:1px solid #35505a;box-shadow:0 26px 80px rgba(0,0,0,.14)}
-.status-card::before{content:"";position:absolute;width:375px;height:375px;right:-144px;top:-140px;border-radius:50%;border:1px solid rgba(128,210,189,.11);box-shadow:0 0 0 42px rgba(128,210,189,.035),0 0 0 95px rgba(128,210,189,.025)}
-.status-card::after{content:"";position:absolute;right:37px;bottom:33px;width:84px;height:84px;background:radial-gradient(circle,rgba(101,210,166,.18),transparent 70%);pointer-events:none}
-.card-top{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:10px}
-.card-kicker{font-weight:800;color:#c2d2d2;text-transform:uppercase;font-size:11px;letter-spacing:.15em}
-.live-pill{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:100px;background:rgba(103,231,184,.11);border:1px solid rgba(103,231,184,.24);font-size:11px;color:#9ce9cf;font-weight:800}
-.live-pill i{display:block;width:6px;height:6px;border-radius:50%;background:var(--green)}
-.status-visual{display:flex;align-items:center;gap:20px;margin-top:39px;position:relative;z-index:1}
-.status-symbol{width:69px;height:69px;flex:0 0 69px;display:grid;place-items:center;border-radius:21px;background:rgba(105,230,184,.12);border:1px solid rgba(105,230,184,.28);color:var(--green)}
-.status-symbol svg{width:33px;height:33px}
-.status-card.off .status-symbol{background:rgba(255,148,123,.12);border-color:rgba(255,148,123,.28);color:var(--red)}
-.status-card.off .live-pill{background:rgba(255,148,123,.1);border-color:rgba(255,148,123,.25);color:var(--red)}
-.status-card.off .live-pill i{background:var(--red)}
-.status-name{font-size:clamp(27px,2.9vw,39px);font-weight:800;letter-spacing:-.045em;line-height:1.12;margin:0}
-.status-sub{font-size:12px;color:#abc1c5;margin-top:9px}
-.status-separator{height:1px;background:rgba(211,237,228,.14);margin:36px 0 20px}
-.status-bottom{display:flex;align-items:flex-end;justify-content:space-between;gap:15px;position:relative;z-index:1}
-.next-caption{font-size:11px;color:#8fa7ad;text-transform:uppercase;letter-spacing:.13em;font-weight:700}
-.next-value{font-size:17px;color:#f0f4f0;font-weight:800;margin-top:4px}
-.clock{font-size:12px;font-weight:800;color:#9fb6b9;letter-spacing:.08em;white-space:nowrap}
-.schedule-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin:12px 0 26px}
-.section-tag{font-size:11px;font-weight:800;letter-spacing:.22em;color:var(--green);text-transform:uppercase}
-h2{font-size:clamp(27px,3vw,36px);letter-spacing:-.055em;line-height:1.15;font-weight:800;margin:8px 0 0}
-.schedule-intro{font-size:13px;color:var(--muted);max-width:350px;text-align:right;margin:0}
-.day-stack{display:grid;gap:22px}
-.day-card{background:linear-gradient(145deg,rgba(26,42,51,.98),rgba(18,31,39,.98));border:1px solid var(--border);border-radius:21px;padding:31px 35px 30px;position:relative;overflow:hidden}
-.day-card::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--green);opacity:.8}
-.day-card.tomorrow::before{background:var(--yellow)}
-.day-header{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:30px}
-.day-id{font-size:10px;text-transform:uppercase;letter-spacing:.22em;color:var(--green);font-weight:800}
-.tomorrow .day-id{color:var(--yellow)}
-.day-date{font-size:24px;font-weight:800;letter-spacing:-.045em;margin-top:3px}
-.last-update{font-size:12px;color:#a9b9bd;text-align:right;padding-top:6px}
-.last-update strong{font-size:13px;color:#dce6e4;font-weight:700}
-.timeline-viewport{overflow-x:auto;scrollbar-width:thin;scrollbar-color:#4d6770 transparent;padding:10px 0 5px}
-.timeline{min-width:660px}
+a:hover{color:var(--green)}
+.container{width:min(940px,calc(100% - 40px));margin:auto}
+.topbar{min-height:54px;display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:10px;font-size:13px;letter-spacing:.015em}
+.brand i{display:block;width:7px;height:7px;background:var(--green);border-radius:2px}
+.brand b{font-size:14px;color:#eef4f5}
+.brand span{color:var(--muted)}
+.top-right{display:flex;gap:20px;align-items:center;color:var(--muted);font-size:11px}
+.hero{margin:20px 0 26px}
+.status-card{border:1px solid var(--border);border-radius:6px;background:var(--panel);padding:12px 18px}
+.card-top{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:10px;letter-spacing:.08em;font-weight:700}
+.clock{font:11px ui-monospace,SFMono-Regular,Consolas,monospace;letter-spacing:0}
+.status-main{display:flex;align-items:center;gap:12px;min-height:31px;flex-wrap:wrap}
+.status-dot{width:9px;height:9px;border-radius:50%;background:var(--green);flex:none}
+.status-card.off .status-dot{background:var(--red)}
+.status-name{font-size:20px;font-weight:650;letter-spacing:-.035em}
+.status-card.off .status-name{color:var(--red)}
+.status-sub{display:none}
+.next-caption{margin-left:auto;color:var(--muted);font-size:11px}
+.next-value{font:12px ui-monospace,SFMono-Regular,Consolas,monospace;color:#c0cbd0}
+.schedule-heading{display:flex;align-items:baseline;justify-content:space-between;gap:15px;margin-bottom:14px}
+h1{font-size:19px;font-weight:650;letter-spacing:-.035em;margin:0}
+.legend{display:flex;gap:14px;align-items:center;color:var(--muted);font-size:11px;white-space:nowrap}
+.legend-item{display:flex;gap:6px;align-items:center}
+.legend-color{width:9px;height:9px;border-radius:2px;background:var(--green)}
+.legend-color.off{background:var(--red)}
+.day-stack{display:grid;gap:12px}
+.day-card{border:1px solid var(--border);border-radius:6px;background:var(--panel);padding:18px 20px}
+.day-header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:17px}
+.day-id{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--green);text-transform:uppercase}
+.tomorrow .day-id{color:var(--muted)}
+.day-date{font-size:16px;font-weight:650;letter-spacing:-.025em;margin-top:2px}
+.last-update{font-size:10px;color:var(--muted);text-align:right}
+.timeline-viewport{overflow-x:auto;scrollbar-width:thin;scrollbar-color:#50606a transparent}
+.timeline{min-width:560px}
 .timeline-shell{position:relative}
-.timeline-strip{display:grid;grid-template-columns:repeat(48,minmax(0,1fr));height:64px;border-radius:9px;overflow:hidden;background:#36444b;box-shadow:inset 0 2px 10px rgba(0,0,0,.2)}
-.slot{min-width:0;position:relative}
-.slot.on{background:#64d8ae}
-.slot.off{background:#f18b74}
-.slot:nth-child(even):not(:last-child){box-shadow:inset -1px 0 rgba(7,20,26,.16)}
-.slot:nth-child(6n):not(:last-child)::after{content:"";position:absolute;right:0;top:0;bottom:0;width:2px;background:rgba(9,28,34,.44)}
-.now-marker{position:absolute;top:-8px;bottom:-8px;width:2px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.22),0 0 15px rgba(255,255,255,.3);z-index:2;pointer-events:none}
-.now-marker::before{content:"";position:absolute;top:-4px;left:-4px;width:10px;height:10px;background:white;border-radius:50%;box-shadow:0 0 0 3px #23333a}
-.axis{position:relative;height:28px;margin-top:15px;font-size:11px;color:#839ba0;font-weight:800;letter-spacing:-.02em}
-.axis-label{position:absolute;top:0;transform:translateX(-50%)}
+.timeline-strip{height:40px;display:grid;grid-template-columns:repeat(48,minmax(0,1fr));border-radius:3px;overflow:hidden;background:#39444b}
+.slot{position:relative;min-width:0}
+.slot.on{background:var(--green)}
+.slot.off{background:var(--red)}
+.slot:nth-child(even):not(:last-child){box-shadow:inset -1px 0 rgba(13,22,30,.2)}
+.slot:nth-child(6n):not(:last-child)::after{content:"";position:absolute;right:0;top:0;bottom:0;width:1px;background:rgba(13,22,30,.5)}
+.now-marker{position:absolute;top:-3px;bottom:-3px;width:2px;background:#fff;box-shadow:0 0 0 1px #12171b;z-index:2;pointer-events:none}
+.now-marker::before{content:"";position:absolute;top:-3px;left:-3px;width:8px;height:8px;background:#fff;border-radius:50%}
+.axis{height:18px;position:relative;margin-top:7px;font:10px ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--muted)}
+.axis-label{position:absolute;transform:translateX(-50%)}
 .axis-label:first-child{transform:none}
 .axis-label:last-child{transform:translateX(-100%)}
-.timeline-footer{border-top:1px solid rgba(166,199,196,.12);margin-top:24px;padding-top:23px;display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
-.legend{display:flex;align-items:center;gap:20px;flex-wrap:wrap;color:#a9bbc0;font-size:12px}
-.legend-item{display:flex;align-items:center;gap:8px}
-.legend-color{width:10px;height:10px;border-radius:3px;background:var(--green)}
-.legend-color.off{background:var(--red)}
-.duration-summary{font-size:12px;color:#b5c4c5;text-align:right;white-space:nowrap}
-.duration-summary strong{color:white;font-weight:800}
-.outages{display:flex;align-items:flex-start;gap:14px;margin-top:26px;flex-wrap:wrap}
-.outages-label{font-size:11px;color:#809ba0;text-transform:uppercase;letter-spacing:.13em;font-weight:800;padding:11px 0 0;flex-shrink:0}
-.periods{display:flex;gap:8px;flex-wrap:wrap}
-.period{font-size:12px;font-weight:800;color:#f6c1b1;background:rgba(251,151,120,.08);border:1px solid rgba(251,151,120,.19);border-radius:9px;padding:9px 12px;white-space:nowrap}
-.period small{font-size:10px;font-weight:700;color:#bca6a3;margin-left:8px}
-.period.none{color:#a7e6cf;background:rgba(105,230,184,.07);border-color:rgba(105,230,184,.18)}
-.empty{min-height:185px;display:flex;align-items:center;gap:23px;border:1px dashed #3d5159;border-radius:14px;padding:30px;background:rgba(11,22,29,.2)}
-.empty-icon{width:58px;height:58px;flex:0 0 58px;display:grid;place-items:center;border-radius:17px;background:rgba(242,206,132,.08);color:var(--yellow)}
-.empty-icon svg{width:27px;height:27px}
-.empty-title{font-size:19px;font-weight:800;letter-spacing:-.035em}
-.empty-text{margin-top:5px;font-size:13px;color:var(--muted);max-width:440px}
-.error-message{font-size:13px;color:#e7b1a4;margin-top:12px}
-.info-bar{display:flex;align-items:center;gap:12px;padding:27px 0 43px;font-size:12px;color:#8fa5a9}
-.info-bar svg{width:18px;height:18px;flex-shrink:0;color:#759397}
-.footer{border-top:1px solid rgba(170,192,192,.14);padding:29px 0 38px;display:flex;justify-content:space-between;gap:20px;align-items:center;color:#7f979c;font-size:11px}
-.footer b{color:#c4d7d7}
-.footer a{color:#b2c7c6}
-.footer a:hover{color:white}
-@media(max-width:870px){.hero{grid-template-columns:1fr;gap:35px;padding:57px 0 45px}.hero-copy{max-width:650px}.status-card{max-width:none}.schedule-heading{align-items:flex-start}.container{width:min(100% - 40px,1180px)}}
-@media(max-width:570px){.container{width:calc(100% - 30px)}.topbar{height:78px}.top-right{gap:0}.source-link{display:none}.hero{padding:48px 0 36px}h1{font-size:49px}.lead{font-size:14px}.hero-note{margin-top:22px}.status-card{padding:25px;min-height:270px}.status-visual{margin-top:31px;gap:15px}.status-symbol{width:56px;height:56px;flex-basis:56px;border-radius:16px}.status-symbol svg{width:27px;height:27px}.status-name{font-size:30px}.status-separator{margin:26px 0 16px}.schedule-heading{display:block;margin-top:0}.schedule-intro{text-align:left;margin-top:10px}.day-card{padding:24px 18px}.day-header{margin-bottom:21px}.day-date{font-size:20px}.last-update{font-size:10px}.last-update strong{font-size:11px}.timeline-footer{display:block}.duration-summary{text-align:left;margin-top:13px}.outages{display:block}.outages-label{padding:0;margin-bottom:12px}.footer{align-items:flex-start;flex-direction:column;gap:9px}.info-bar{align-items:flex-start}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.timeline-footer{display:flex;justify-content:flex-end;margin-top:3px}
+.duration-summary{font-size:11px;color:var(--muted)}
+.duration-summary strong{color:var(--text);font-weight:600}
+.outages{display:flex;align-items:flex-start;gap:16px;margin-top:14px;padding-top:11px;border-top:1px solid var(--border)}
+.outages-label{color:var(--muted);font-size:11px;padding-top:4px;flex:none}
+.periods{display:flex;gap:6px;flex-wrap:wrap}
+.period{padding:4px 8px;border-radius:3px;border:1px solid #734a48;background:#392b2d;color:#efaaa4;font:11px ui-monospace,SFMono-Regular,Consolas,monospace;white-space:nowrap}
+.period.none{color:var(--green);border-color:#355a54;background:#243b38}
+.empty{padding:24px 0;color:var(--muted);font-size:12px}
+.error-message{font-size:12px;color:var(--red)}
+.footer{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:17px 0 25px;margin-top:16px;border-top:1px solid var(--border);color:var(--muted);font-size:10px}
+@media(max-width:620px){
+ .container{width:calc(100% - 24px)}
+ .top-right{gap:9px;font-size:10px}
+ .hero{margin:12px 0 20px}
+ .status-card{padding:10px 12px}
+ .status-main{gap:8px}
+ .status-name{font-size:18px}
+ .next-caption{margin-left:0;width:100%}
+ .next-value{margin-top:-8px}
+ .schedule-heading{align-items:flex-start;flex-wrap:wrap}
+ h1{font-size:17px}
+ .day-card{padding:13px 12px}
+ .day-date{font-size:14px}
+ .day-header{margin-bottom:13px}
+ .outages{gap:10px;flex-direction:column}
+ .outages-label{padding:0}
+}
 </style>
 </head>
 <body>
 <div class="container">
 <header class="topbar">
-    <a class="logo" href="./" aria-label="Свет по расписанию">
-        <span class="logo-mark"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.7 2 4.8 13.2h6l-.8 8.8 9.3-12.4h-6.1L13.7 2Z"/></svg></span>
-        <span>СВЕТ<span class="logo-sub">ПО РАСПИСАНИЮ</span></span>
-    </a>
-    <div class="top-right"><span class="zone"><span class="zone-dot"></span> ГРУППА 4.2</span><a class="source-link" href="https://www.dtek-dnem.com.ua/ua/shutdowns" target="_blank" rel="noopener noreferrer">Источник: ДТЭК ↗</a></div>
+    <div class="brand"><i aria-hidden="true"></i><b>ДТЭК</b><span>/</span> GPV4.2</div>
+    <div class="top-right"><span>Europe/Kyiv</span><a href="https://www.dtek-dnem.com.ua/ua/shutdowns" target="_blank" rel="noopener noreferrer">Источник ↗</a></div>
 </header>
 <main>
-    <section class="hero" aria-labelledby="hero-heading">
-        <div class="hero-copy">
-            <div class="eyebrow">ГРАФИК ЭЛЕКТРОСНАБЖЕНИЯ</div>
-            <h1 id="hero-heading">Свет по<br><em>расписанию.</em></h1>
-            <p class="lead">Когда будет электричество, а когда — отключение. Всё по часам, без лишних таблиц. Днепропетровская область, очередь 4.2.</p>
-            <div class="hero-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Время — по Киеву · интервалы по 30 минут</span></div>
-        </div>
+    <section class="hero" aria-label="Текущее состояние">
         <div class="status-card" id="status-card" aria-live="polite">
-            <div class="card-top"><span class="card-kicker">Текущий статус по графику</span><span class="live-pill"><i></i> СЕЙЧАС</span></div>
-            <div class="status-visual">
-                <div class="status-symbol"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4.5 13h6.3L10 22l9.5-12.5h-6.3L13 2Z"/></svg></div>
-                <div><div class="status-name" id="current-status">Загрузка…</div><div class="status-sub" id="current-description">Получаем актуальный график</div></div>
+            <div class="card-top"><span>СЕЙЧАС</span><span class="clock" id="kyiv-clock">--:--</span></div>
+            <div class="status-main">
+                <span class="status-dot" aria-hidden="true"></span>
+                <span class="status-name" id="current-status">Загрузка…</span>
+                <span class="status-sub" id="current-description"></span>
+                <span class="next-caption">Следующее</span>
+                <span class="next-value" id="next-change">—</span>
             </div>
-            <div class="status-separator"></div>
-            <div class="status-bottom"><div><div class="next-caption">Следующее изменение</div><div class="next-value" id="next-change">—</div></div><div class="clock" id="kyiv-clock">КИЕВ · --:--</div></div>
         </div>
     </section>
     <section aria-labelledby="schedule-title">
-        <div class="schedule-heading"><div><div class="section-tag">24 ЧАСА / 48 ИНТЕРВАЛОВ</div><h2 id="schedule-title">График отключений</h2></div><p class="schedule-intro">Бирюзовый — электричество есть. Коралловый — отключение по графику.</p></div>
+        <div class="schedule-heading">
+            <h1 id="schedule-title">График отключений</h1>
+            <div class="legend"><span class="legend-item"><i class="legend-color"></i> Свет есть</span><span class="legend-item"><i class="legend-color off"></i> Нет света</span></div>
+        </div>
         <div class="day-stack">
-            <article class="day-card" id="today-card" aria-labelledby="today-date"><div class="day-header"><div><div class="day-id">01 / СЕГОДНЯ</div><div class="day-date" id="today-date">Загрузка…</div></div><div class="last-update" id="today-update"></div></div><div id="today-content"></div></article>
-            <article class="day-card tomorrow" id="tomorrow-card" aria-labelledby="tomorrow-date"><div class="day-header"><div><div class="day-id">02 / ЗАВТРА</div><div class="day-date" id="tomorrow-date">Загрузка…</div></div><div class="last-update" id="tomorrow-update"></div></div><div id="tomorrow-content"></div></article>
+            <article class="day-card" id="today-card" aria-labelledby="today-date"><div class="day-header"><div><div class="day-id">Сегодня</div><div class="day-date" id="today-date">Загрузка…</div></div><div class="last-update" id="today-update"></div></div><div id="today-content"></div></article>
+            <article class="day-card tomorrow" id="tomorrow-card" aria-labelledby="tomorrow-date"><div class="day-header"><div><div class="day-id">Завтра</div><div class="day-date" id="tomorrow-date">Загрузка…</div></div><div class="last-update" id="tomorrow-update"></div></div><div id="tomorrow-content"></div></article>
         </div>
     </section>
-    <div class="info-bar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></svg><span>Фактическое электроснабжение может отличаться от опубликованного графика. Данные автоматически подгружаются из репозитория.</span></div>
 </main>
-<footer class="footer"><span><b>СВЕТ</b> · График GPV4.2</span><span>Данные: <a href="https://www.dtek-dnem.com.ua/ua/shutdowns" target="_blank" rel="noopener noreferrer">ДТЭК Дніпровські електромережі</a> · <a href="https://github.com/KorobeynikovAndrey/dtek-shutdowns" target="_blank" rel="noopener noreferrer">GitHub ↗</a></span></footer>
+<footer class="footer"><span>График по 30 минут · данные ДТЭК</span><a href="https://github.com/KorobeynikovAndrey/dtek-shutdowns" target="_blank" rel="noopener noreferrer">GitHub ↗</a></footer>
 </div>
 <script>
 const timeZone = 'Europe/Kyiv';
@@ -217,14 +187,14 @@ function renderTimeline(slots, today) {
     const marker=today?`<div class="now-marker" id="now-marker" style="left:${minutesNow()/1440*100}%" aria-hidden="true"></div>`:'';
     const strip=slots.map(v=>`<div class="slot ${v?'on':'off'}"></div>`).join('');
     const labels=Array.from({length:9},(_,i)=>`<span class="axis-label" style="left:${i*12.5}%">${String(i*3).padStart(2,'0')}:00</span>`).join('');
-    const badges=periods.length?periods.map(p=>`<span class="period">${clockTime(p.start)}–${clockTime(p.end)}<small>${duration(slots.slice(p.start,p.end),false)}</small></span>`).join(''):'<span class="period none">Отключений нет</span>';
+    const badges=periods.length?periods.map(p=>`<span class="period">${clockTime(p.start)}–${clockTime(p.end)}</span>`).join(''):'<span class="period none">Отключений нет</span>';
     return `<div class="timeline-viewport" aria-label="График по получасовым интервалам"><div class="timeline"><div class="timeline-shell"><div class="timeline-strip">${strip}</div>${marker}</div><div class="axis">${labels}</div></div></div>
-        <div class="timeline-footer"><div class="legend"><span class="legend-item"><span class="legend-color"></span>Свет есть</span><span class="legend-item"><span class="legend-color off"></span>Нет света</span></div><div class="duration-summary">Без света <strong>${duration(slots,false)}</strong> · Со светом <strong>${duration(slots,true)}</strong></div></div>
-        <div class="outages"><div class="outages-label">Периоды отключений</div><div class="periods">${badges}</div></div>`;
+        <div class="timeline-footer"><div class="duration-summary">Без света <strong>${duration(slots,false)}</strong></div></div>
+        <div class="outages"><div class="outages-label">Отключения</div><div class="periods">${badges}</div></div>`;
 }
 
 function emptyMarkup(message, extra='') {
-    return `<div class="empty"><span class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5m0 4h.01"/></svg></span><div><div class="empty-title">${message}</div><div class="empty-text">${extra}</div></div></div>`;
+    return `<div class="empty">${message}</div>`;
 }
 
 async function fetchSchedule(file) {
@@ -272,7 +242,7 @@ async function loadSchedules() {
             schedules[name]=slots;
             if(slots) {
                 content.innerHTML=renderTimeline(slots,name==='today');
-                update.textContent=`Обновлено ДТЭК: ${json.update||'—'}`;
+                update.textContent=`Обновлено: ${json.update||'—'}`;
             } else {
                 content.innerHTML=name==='today'?emptyMarkup('График пока недоступен','Ожидаем публикацию расписания на сегодня.'):emptyMarkup('График ещё не опубликован','Как только появится расписание на завтра, оно отобразится здесь.');
                 update.textContent='';
