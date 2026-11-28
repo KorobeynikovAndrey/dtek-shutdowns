@@ -18,7 +18,13 @@ h1{font-size:clamp(20px,2.3vw,30px);margin:0;letter-spacing:-.025em}
 button{font:inherit;color:inherit;cursor:pointer}
 .refresh{display:grid;place-items:center;background:none;border:0;padding:5px}
 .refresh svg{width:22px;height:22px}
-.tabs{display:flex;gap:10px;margin:8px 0 22px}
+.tabs{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:8px 0 22px}
+.group-select{display:flex;align-items:center;gap:6px;margin-left:auto}
+.group-select select,.group-reset{font:inherit;color:var(--text);background:#20283b;border:1px solid var(--border);border-radius:10px;height:46px}
+.group-select select{padding:0 12px;min-width:126px;cursor:pointer}
+.group-reset{display:grid;place-items:center;width:40px;padding:0}
+.group-reset svg{width:18px;height:18px}
+.group-reset:hover{background:#303b50}
 .tab{padding:11px 22px;border:1px solid var(--border);border-radius:10px;background:#20283b;font-size:16px}
 .tab.active{background:#1769d8;border-color:#388cf4;font-weight:650}
 [hidden]{display:none!important}
@@ -29,6 +35,8 @@ button{font:inherit;color:inherit;cursor:pointer}
 .label{height:var(--row-height);display:flex;align-items:center;justify-content:center;font-weight:650;border-bottom:1px solid var(--border);white-space:nowrap}
 .label:last-child{border-bottom:0}
 .label.selected{background:#25483e;color:#e5fff0}
+.label.dimmed{color:var(--muted)}
+.timeline-strip.dimmed .hour-bar{filter:grayscale(1) brightness(.58)}
 .label.header{height:var(--header-height);font-weight:700}
 .timeline-shell{position:relative}
 .hour-axis,.timeline-strip{display:grid;grid-template-columns:repeat(24,minmax(0,1fr))}
@@ -73,6 +81,10 @@ a:hover{color:var(--text)}
     <nav class="tabs" aria-label="День">
         <button class="tab active" id="today-tab">Сегодня</button>
         <button class="tab" id="tomorrow-tab" hidden>Завтра</button>
+        <div class="group-select">
+            <select id="group-select" aria-label="Группа"><option value="">Все группы</option></select>
+            <button class="group-reset" id="group-reset" title="Сбросить выбор" aria-label="Сбросить выбор" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+        </div>
     </nav>
     <div class="timeline-viewport" id="schedule"><div class="empty">Загрузка…</div></div>
     <div class="legend">
@@ -85,7 +97,7 @@ a:hover{color:var(--text)}
 </div>
 <script>
 const timeZone = 'Europe/Kyiv';
-const group = 'GPV8.1';
+let group = localStorage.getItem('group') || '';
 const dateFormatter = new Intl.DateTimeFormat('en-GB', {timeZone, year:'numeric', month:'2-digit', day:'2-digit'});
 const tabFormatter = new Intl.DateTimeFormat('ru-RU', {timeZone,day:'numeric',month:'long'});
 const types = {yes:['on','on'],no:['off','off'],first:['off','on'],second:['on','off'],maybe:['maybe','maybe'],mfirst:['maybe','on'],msecond:['on','maybe']};
@@ -129,9 +141,10 @@ function escapeHtml(value) {
 }
 
 function renderTimeline(rows, today) {
-    const labels = '<div class="label header">Группа</div>'+rows.map(row=>'<div class="label'+(row.name===group?' selected':'')+'">'+escapeHtml(row.name)+'</div>').join('');
+    const selected = rows.some(row=>row.name===group);
+    const labels = '<div class="label header">Группа</div>'+rows.map(row=>'<div class="label'+(selected?(row.name===group?' selected':' dimmed'):'')+'">'+escapeHtml(row.name)+'</div>').join('');
     const axis = Array.from({length:24},(_,i)=>'<span class="hour-label">'+String(i).padStart(2,'0')+'</span>').join('');
-    const strips = rows.map(row=>'<div class="timeline-strip">'+row.slots.map(([a,b],i)=>{
+    const strips = rows.map(row=>'<div class="timeline-strip'+(selected&&row.name!==group?' dimmed':'')+'">'+row.slots.map(([a,b],i)=>{
         const names={on:'Есть свет',off:'Нет света',maybe:'Возможно отключение',unknown:'Нет данных'};
         const title=clockTime(i*60)+'–'+clockTime(i*60+30)+': '+names[a]+'; '+clockTime(i*60+30)+'–'+clockTime((i+1)*60)+': '+names[b];
         return '<div class="hour-cell" title="'+title+'"><div class="hour-bar'+(a===b?' same':'')+'"><div class="slot '+a+'"></div><div class="slot '+b+'"></div></div></div>';
@@ -159,8 +172,17 @@ function updateStatus() {
     document.getElementById('now-time').textContent=clockTime(minutes);
 }
 
+function renderGroupSelect() {
+    const groups = [...new Set(Object.values(schedules).flatMap(item=>(item.rows||[]).map(row=>row.name)))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+    const select=document.getElementById('group-select');
+    select.innerHTML='<option value="">Все группы</option>'+groups.map(name=>'<option value="'+escapeHtml(name)+'">'+escapeHtml(name)+'</option>').join('');
+    select.value=groups.includes(group)?group:'';
+    document.getElementById('group-reset').hidden=!group;
+}
+
 function renderDay() {
     const item=schedules[activeDay];
+    renderGroupSelect();
     document.getElementById('today-tab').classList.toggle('active',activeDay==='today');
     document.getElementById('tomorrow-tab').classList.toggle('active',activeDay==='tomorrow');
     document.getElementById('last-update').textContent='Обновлено: '+(item?.update||'—');
@@ -191,6 +213,17 @@ async function loadSchedules() {
 
 document.getElementById('today-tab').onclick=()=>{activeDay='today';renderDay();};
 document.getElementById('tomorrow-tab').onclick=()=>{activeDay='tomorrow';renderDay();};
+document.getElementById('group-select').onchange=event=>{
+    group=event.target.value;
+    if(group) localStorage.setItem('group',group);
+    else localStorage.removeItem('group');
+    renderDay();
+};
+document.getElementById('group-reset').onclick=()=>{
+    group='';
+    localStorage.removeItem('group');
+    renderDay();
+};
 document.getElementById('refresh').onclick=loadSchedules;
 loadSchedules();
 setInterval(()=>{
